@@ -75,6 +75,28 @@ This project utilizes Terraform workspaces to manage different environments like
    terraform destroy
    ```
 
+## Importing Existing Resources into Terraform
+
+If a resource, such as an EC2 instance or S3 bucket, already exists and you want Terraform to manage it, use the `terraform import` command.
+
+Example:
+```bash
+terraform import aws_instance.example i-0573763ef5312afd6
+```
+This imports an existing AWS EC2 instance with the ID `i-0573763ef5312afd6` into your Terraform configuration, associating it with the resource `aws_instance.example`.
+
+## Updating Terraform State with External Changes
+
+If resources in your infrastructure are changed outside of Terraform (e.g., using the AWS Console), you can update your Terraform state to reflect those changes without applying any additional configuration changes.
+
+- Run the `terraform refresh` command to reconcile the state:
+   ```bash
+   terraform refresh
+   ```
+   This command updates the Terraform state file with the actual state of the resources.
+
+After running `terraform refresh`, Terraform will compare its state file with the real-world infrastructure, making sure the state file matches the current configuration of your resources. No changes will be made to the infrastructure; this only updates Terraform's understanding of it.
+
 ## EC2 Instance
 
 The EC2 instance is created using a module and includes the following:
@@ -90,33 +112,6 @@ module "ec2_instance" {
   instance_type_value = lookup(var.instance_type_value, terraform.workspace, "t3.micro")
 }
 ```
-
-## Importing Existing Resources into Terraform
-
-If you have an existing resource (like an AWS EC2 instance) that is not yet managed by Terraform, you can import it into your Terraform state using the `terraform import` command. This is useful when you want Terraform to start managing resources that were created manually or outside of Terraform.
-
-### Example of Importing an AWS EC2 Instance:
-To import an existing EC2 instance into Terraform, you will need the EC2 instance ID and the resource address in your Terraform configuration. 
-
-For example, to import an EC2 instance with the ID `i-0573763ef5312afd6` into a resource named `aws_instance.example` in your Terraform configuration, use the following command:
-
-```bash
-terraform import aws_instance.example i-0573763ef5312afd6
-```
-
-### Steps:
-1. **Add the resource to your `main.tf` file**:
-   ```hcl
-   resource "aws_instance" "example" {
-     # Configuration options like AMI, instance type, etc.
-   }
-   ```
-
-2. **Run the `terraform import` command**:
-   This tells Terraform to associate the existing instance with the configuration in your `.tf` files.
-
-3. **Verify the Import**:
-   After importing, run `terraform show` to check if the instance has been correctly imported and its state matches the existing resource.
 
 ## Conclusion
 
