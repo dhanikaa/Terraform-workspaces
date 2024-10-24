@@ -91,6 +91,33 @@ module "ec2_instance" {
 }
 ```
 
+## Importing Existing Resources into Terraform
+
+If you have an existing resource (like an AWS EC2 instance) that is not yet managed by Terraform, you can import it into your Terraform state using the `terraform import` command. This is useful when you want Terraform to start managing resources that were created manually or outside of Terraform.
+
+### Example of Importing an AWS EC2 Instance:
+To import an existing EC2 instance into Terraform, you will need the EC2 instance ID and the resource address in your Terraform configuration. 
+
+For example, to import an EC2 instance with the ID `i-0573763ef5312afd6` into a resource named `aws_instance.example` in your Terraform configuration, use the following command:
+
+```bash
+terraform import aws_instance.example i-0573763ef5312afd6
+```
+
+### Steps:
+1. **Add the resource to your `main.tf` file**:
+   ```hcl
+   resource "aws_instance" "example" {
+     # Configuration options like AMI, instance type, etc.
+   }
+   ```
+
+2. **Run the `terraform import` command**:
+   This tells Terraform to associate the existing instance with the configuration in your `.tf` files.
+
+3. **Verify the Import**:
+   After importing, run `terraform show` to check if the instance has been correctly imported and its state matches the existing resource.
+
 ## Conclusion
 
 This project demonstrates how to use Terraform to manage AWS infrastructure across multiple environments using workspaces. By separating configurations using workspaces and variable files, it's easier to manage resources in different stages of deployment.
